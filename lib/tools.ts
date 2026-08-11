@@ -23,7 +23,10 @@ export const getProduct = tool({
         price:product.price,
         description: product.description,
         featured: product.featured,
-        images: product.images
+        images: product.images,
+        id:product.id,
+        tags:product.tags,
+        slug:product.slug
       };
     } catch (err) {
       const message =

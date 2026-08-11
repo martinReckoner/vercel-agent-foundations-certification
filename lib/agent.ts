@@ -9,7 +9,12 @@
  * Workshop docs: https://agent-foundations-certification.vercel.app/docs/chat-agent
  */
 
-import { ToolLoopAgent } from "ai";
+import { 
+    ToolLoopAgent,
+    type InferAgentUIMessage, 
+    type UIToolInvocation, 
+  
+ } from "ai";
 import { searchProducts, getAllCategories, returnOrder, getProduct} from "@/lib/tools";
 
 export const shoppingAgent = new ToolLoopAgent({ 
@@ -22,3 +27,7 @@ export const shoppingAgent = new ToolLoopAgent({
     `, 
     tools: { searchProducts, getAllCategories, returnOrder, getProduct }, 
 });
+
+export type ShoppingAgentUIMessage = InferAgentUIMessage<typeof shoppingAgent>;
+export type SearchProductsToolInvocation = UIToolInvocation<typeof searchProducts>;
+export type ProductDetailsToolInvocation = UIToolInvocation<typeof getProduct>;
