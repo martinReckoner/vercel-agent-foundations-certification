@@ -10,6 +10,8 @@
  *
  * Workshop docs: https://agent-foundations-certification.vercel.app/docs/chat-agent
  */
+import { WorkflowChatTransport } from "@workflow/ai";
+import { useMemo } from "react";
 import { useState } from "react";
 import {
   Conversation,
@@ -27,11 +29,38 @@ import {
 } from "@/components/ai-elements/prompt-input";
 import { useChat } from "@ai-sdk/react"; 
 import { Message, MessageContent, MessageResponse } from "./ai-elements/message";
+import type { ShoppingAgentUIMessage } from "@/lib/agent"; 
+import { AgentProductList } from "./agent-product-list"; 
+import {AgentProductCard} from "./agent-product-card";
+
 
 export function AgentChat() {
+
+  const activeRunId = useMemo(() => {
+    if (typeof window === "undefined") return undefined;
+    return localStorage.getItem("active-workflow-run-id") ?? undefined;
+  }, []);
+
   const [input, setInput] = useState("");
 
-  const { messages, error, sendMessage } = useChat(); 
+  const { messages, error, sendMessage } = useChat<ShoppingAgentUIMessage>({ 
+    resume: Boolean(activeRunId),
+    transport: new WorkflowChatTransport({
+      api: "/api/chat",
+      onChatSendMessage: (response) => {
+        const runId = response.headers.get("x-workflow-run-id");
+        if (runId) localStorage.setItem("active-workflow-run-id", runId);
+      },
+      onChatEnd: () => localStorage.removeItem("active-workflow-run-id"),
+      prepareReconnectToStreamRequest: ({ api, ...rest }) => {
+        const runId = localStorage.getItem("active-workflow-run-id");
+        if (!runId) throw new Error("No active workflow run ID found");
+        return { ...rest, api: `/api/chat/${encodeURIComponent(runId)}/stream` };
+      },
+    }),
+  });
+
+
   const handleSubmit = (message: PromptInputMessage) => { 
     sendMessage({ text: input }); 
     setInput(""); 
@@ -53,6 +82,14 @@ export function AgentChat() {
                       </MessageContent>
                     </Message>
                   ); 
+                case "tool-searchProducts": 
+                  return ( 
+                    <AgentProductList key={`${m.id}-${i}`} invocation={p} />
+                  ); 
+                case "tool-getProduct":
+                  return (
+                   <AgentProductCard key={`${m.id}-${i}`} invocation={p}></AgentProductCard>
+                  );
                 default: 
                   return null; 
               } 
