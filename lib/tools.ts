@@ -16,6 +16,24 @@ import {
 } from "@/lib/api"; 
 import { start } from "workflow/api"; 
 import { returnFlow } from "./workflows/return-flow";
+import { createOrGetSandbox, SANDBOX_NAME } from "@/lib/sandbox"; 
+
+export const bash = tool({
+  description: "Run a bash command in the sandbox environment",
+  inputSchema: z.object({
+    command: z.string().describe("The bash command to run"),
+  }),
+  execute: async ({ command }) => {
+    "use step";
+    const sandbox = await createOrGetSandbox(SANDBOX_NAME);
+    const result = await sandbox.runCommand("bash", ["-lc", command]);
+    return {
+      stdout: await result.stdout(),
+      stderr: await result.stderr(),
+      exitCode: result.exitCode,
+    };
+  },
+});
 
 export const getProduct = tool({
   description: `Get a product available in the Vercel swag store, along with the description of the product that corresponds to the ID passed as parameter. Use this when the user asks to retrieve detailed information of a product.`,
