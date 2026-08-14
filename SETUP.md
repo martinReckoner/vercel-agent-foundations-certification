@@ -1,6 +1,9 @@
 # Setup Guide
 
 ## Workshop https://agent-foundations-globant-bwsdt7z5t.vercel.app/docs
+## Vercel deployment
+- https://vercel.com/globant-agent-foundations-workshop/my-agent2
+- https://vercel.com/martinaguila-4137s-projects/vercel-agent-foundations-certification
 
 This repository contains two applications:
 1. **Next.js Storefront** (Ship It Shop) - runs on port 3000
