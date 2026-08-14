@@ -1,3 +1,6 @@
+packages:
+  - 'my-agent'
+
 allowBuilds:
   '@swc/core': false
   cbor-extract: false
