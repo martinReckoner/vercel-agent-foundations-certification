@@ -26,3 +26,9 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 /.swc
+
+# eve agent runtime
+/my-agent
+
+# macOS
+.DS_Store
