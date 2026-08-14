@@ -28,7 +28,7 @@ next-env.d.ts
 /.swc
 
 # eve agent runtime
-/my-agent
+#/my-agent
 
 # macOS
 .DS_Store
