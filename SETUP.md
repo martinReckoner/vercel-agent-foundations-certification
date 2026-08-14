@@ -1,8 +1,11 @@
 # Setup Guide
 
+## Workshop https://agent-foundations-globant-bwsdt7z5t.vercel.app/docs
+
 This repository contains two applications:
 1. **Next.js Storefront** (Ship It Shop) - runs on port 3000
 2. **Eve Agent** (AI agent) - runs on port 2000
+
 
 ## Prerequisites
 
